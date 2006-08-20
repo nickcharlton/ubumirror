@@ -1,0 +1,98 @@
+#! /bin/bash
+set -e
+
+if [ ! -f $HOME/ubumirror.conf ]; then
+	echo "No $HOME/ubumirror.conf!"
+	exit
+fi
+
+. $HOME/ubumirror.conf
+
+if [ ! "$1" = "" ]; then
+  SPEED="$1"
+fi
+
+#HOSTNAME=`hostname -f`
+HOSTNAME=mirror.nafallo.info
+
+LOCK="${CDIMAGE}/Archive-Update-in-Progress-${HOSTNAME}"
+
+ALTERNATE="${CDIMAGE}/daily/"
+DESKTOP="${CDIMAGE}/daily-live/"
+
+# Get in the right directory and set the umask to be group writable
+# 
+cd $HOME
+umask 022
+
+# Check to see if another sync is in progress
+if lockfile -! -l 43200 -r 0 "$LOCK"; then
+  echo $HOSTNAME is unable to start rsync, lock file exists
+  exit 1
+fi
+trap 'rm -f $LOCK > /dev/null 2>&1; echo -n "Done at " >> $LOGDIR/ubucdimage.log; date >> $LOGDIR/ubucdimage.log; savelog -n $LOGDIR/ubucdimage.log > /dev/null' EXIT
+
+echo -n "Starting at " >> $LOGDIR/ubucdimage.log
+date >> $LOGDIR/ubucdimage.log
+
+set +e
+echo "Syncing files needed to use jigit..." >> $LOGDIR/ubucdimage.log
+rsync -rltvHz --timeout=600 --bwlimit=$SPEED \
+      --exclude *.iso --exclude jigit/ \
+      $CD_EXCLUDE \
+      $CD_HOST::$CD_DIR/daily/current/ $ALTERNATE >> $LOGDIR/ubucdimage.log 2>&1
+
+if [ `grep -c '^total size is' $LOGDIR/ubucdimage.log ` -ne 1 ]; then
+        ( echo "Eeek. Ubuntu jigdo rsync broke down... Check logs.."; \
+          egrep '^write failed|@ERROR' $LOGDIR/ubucdimage.log ) | mail -s "Ubuntu cdimage sync failed" $EMAIL
+        echo "Eeek. Ubuntu jigdo rsync broke down..." >> $LOGDIR/ubucdimage.log
+        exit 1
+fi
+
+echo -n "Done at " >> $LOGDIR/ubucdimage.log
+date >> $LOGDIR/ubucdimage.log && echo "" >> $LOGDIR/ubucdimage.log
+echo "Generating images for alternate CDs..." >> $LOGDIR/ubucdimage.log
+
+for a in ${ALTERNATE}*.jigdo; do
+	b=`basename $a .jigdo`
+	echo -n "jigiting ${b}.iso..." >> $LOGDIR/ubucdimage.log
+	mkimage -m Debian=$ARCHIVE -f ${ALTERNATE}MD5SUMS -j ${ALTERNATE}${b}.jigdo -t ${ALTERNATE}${b}.template -o ${ALTERNATE}.${b}.iso >> $LOGDIR/ubucdimage.log 2>/dev/null
+	if test -s ${ALTERNATE}.${b}.iso; then
+		mv ${ALTERNATE}.${b}.iso ${ALTERNATE}${b}.iso;
+		echo " Successful!" >> $LOGDIR/ubucdimage.log;
+	else
+		echo " Failed!" >> $LOGDIR/ubucdimage.log;
+	fi
+done
+
+echo -n "Done at " >> $LOGDIR/ubucdimage.log
+date >> $LOGDIR/ubucdimage.log && echo "" >> $LOGDIR/ubucdimage.log
+echo "Syncing alternate ISOs..." >> $LOGDIR/ubucdimage.log
+
+rsync -rltvHz --partial --timeout=600 --bwlimit=$SPEED \
+      $CD_EXCLUDE \
+      $CD_HOST::$CD_DIR/daily/current/ $ALTERNATE >> $LOGDIR/ubucdimage.log 2>&1
+
+if [ `grep -c '^total size is' $LOGDIR/ubucdimage.log ` -ne 2 ]; then
+        ( echo "Eeek. Ubuntu alternate rsync broke down... Check logs.."; \
+          egrep '^write failed|@ERROR' $LOGDIR/ubucdimage.log ) | mail -s "Ubuntu cdimage sync failed" $EMAIL
+        echo "Eeek. Ubuntu alternate rsync broke down..." >> $LOGDIR/ubucdimage.log
+        exit 2
+fi
+
+echo -n "Done at " >> $LOGDIR/ubucdimage.log
+date >> $LOGDIR/ubucdimage.log && echo "" >> $LOGDIR/ubucdimage.log
+echo "Syncing desktop ISOs..." >> $LOGDIR/ubucdimage.log
+
+rsync -rltvHz --partial --timeout=600 --bwlimit=$SPEED \
+      $CD_EXCLUDE \
+      $CD_HOST::$CD_DIR/daily-live/current/ $DESKTOP >> $LOGDIR/ubucdimage.log 2>&1
+
+if [ `grep -c '^total size is' $LOGDIR/ubucdimage.log ` -ne 3 ]; then
+        ( echo "Eeek. Ubuntu desktop rsync broke down... Check logs.."; \
+          egrep '^write failed|@ERROR' $LOGDIR/ubucdimage.log ) | mail -s "Ubuntu cdimage sync failed" $EMAIL
+        echo "Eeek. Ubuntu desktop rsync broke down..." >> $LOGDIR/ubucdimage.log
+        exit 2
+fi
+
+rm -f $LOCK > /dev/null 2>&1

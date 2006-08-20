@@ -13,7 +13,7 @@ if [ ! "$1" = "" ]; then
 fi
 
 #HOSTNAME=`hostname -f`
-HOSTNAME=mirror.magicalforest.se
+HOSTNAME=mirror.nafallo.info
 
 LOCK="${ARCHIVE}/Archive-Update-in-Progress-${HOSTNAME}"
 
@@ -27,42 +27,42 @@ if lockfile -! -l 43200 -r 0 "$LOCK"; then
   echo ${HOSTNAME} is unable to start rsync, lock file exists
   exit 1
 fi
-trap 'rm -f $LOCK > /dev/null 2>&1; echo -n "Done at " >> $LOGDIR/ubusync.log; date >> $LOGDIR/ubusync.log; savelog -n $LOGDIR/ubusync.log > /dev/null' EXIT
+trap 'rm -f $LOCK > /dev/null 2>&1; echo -n "Done at " >> $LOGDIR/ubuarchive.log; date >> $LOGDIR/ubuarchive.log; savelog -n $LOGDIR/ubuarchive.log > /dev/null' EXIT
 
-echo -n "Starting at " > $LOGDIR/ubusync.log
-date >> $LOGDIR/ubusync.log
+echo -n "Starting at " > $LOGDIR/ubuarchive.log
+date >> $LOGDIR/ubuarchive.log
 
 set +e
-echo "First sync without dists and indices..." >> $LOGDIR/ubusync.log
+echo "First sync without dists and indices..." >> $LOGDIR/ubuarchive.log
 rsync -rLtvHz --timeout=600 --partial --bwlimit=$SPEED \
-      --delete --delete-after --exclude "*.tar.gz" \
+      --delete --delete-after \
       --exclude "indices/" --exclude "dists/" \
       --exclude "Archive-Update-in-Progress-${HOSTNAME}" \
       --exclude "project/trace/${HOSTNAME}" \
       $AR_EXCLUDE \
-      $AR_HOST::$AR_DIR/ $ARCHIVE/ >> $LOGDIR/ubusync.log 2>&1
+      $AR_HOST::$AR_DIR/ $ARCHIVE/ >> $LOGDIR/ubuarchive.log 2>&1
 
-if [ `grep -c '^total size is' $LOGDIR/ubusync.log ` -ne 1 ]; then
+if [ `grep -c '^total size is' $LOGDIR/ubuarchive.log ` -ne 1 ]; then
 	( echo "Eeek. First rsync to ubuntu broke down... Check logs.."; \
-	  egrep '^write failed|@ERROR' $LOGDIR/ubusync.log ) | mail -s "Ubuntu sync failed" $EMAIL
-	echo "Eeek. First rsync to ubuntu broke down..." >> $LOGDIR/ubusync.log
+	  egrep '^write failed|@ERROR' $LOGDIR/ubuarchive.log ) | mail -s "Ubuntu archive sync failed" $EMAIL
+	echo "Eeek. First rsync to ubuntu broke down..." >> $LOGDIR/ubuarchive.log
 	exit 1
 fi
-echo -n "Done at " >> $LOGDIR/ubusync.log
-date >> $LOGDIR/ubusync.log && echo "" >> $LOGDIR/ubusync.log
+echo -n "Done at " >> $LOGDIR/ubuarchive.log
+date >> $LOGDIR/ubuarchive.log && echo "" >> $LOGDIR/ubuarchive.log
 
-echo "Second sync without pool..." >> $LOGDIR/ubusync.log
+echo "Second sync without pool..." >> $LOGDIR/ubuarchive.log
 rsync -rltvHz --timeout=600 --partial --bwlimit=$SPEED \
       --delete --delete-after --exclude "pool/" \
       --exclude "Archive-Update-in-Progress-${HOSTNAME}" \
       --exclude "project/trace/${HOSTNAME}" \
       $AR_EXCLUDE \
-      $AR_HOST::$AR_DIR/ $ARCHIVE/ >> $LOGDIR/ubusync.log 2>&1
+      $AR_HOST::$AR_DIR/ $ARCHIVE/ >> $LOGDIR/ubuarchive.log 2>&1
 
-if [ `grep -c '^total size is' $LOGDIR/ubusync.log ` -ne 2 ]; then
+if [ `grep -c '^total size is' $LOGDIR/ubuarchive.log ` -ne 2 ]; then
 	( echo "Eeek. Second rsync to ubuntu broke down... Check logs.."; \
-	  grep '@ERROR' $LOGDIR/ubusync.log ) | mail -s "Ubuntu sync failed" $EMAIL
-	echo "Eeek. Second rsync to ubuntu broke down..." >> $LOGDIR/ubusync.log
+	  grep '@ERROR' $LOGDIR/ubuarchive.log ) | mail -s "Ubuntu archive sync failed" $EMAIL
+	echo "Eeek. Second rsync to ubuntu broke down..." >> $LOGDIR/ubuarchive.log
 	exit 2
 fi
 
