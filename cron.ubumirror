@@ -1,0 +1,2 @@
+#03 */6 * * * ubumirror /home/ubumirror/ubusync >/dev/null
+#03 11 * * * ubumirror /home/ubumirror/ubucd >/dev/null
