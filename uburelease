@@ -52,12 +52,12 @@ echo "Generating images for alternate CDs..." >> $LOGDIR/uburelease.log
 
 for a in ${RELEASE}/*; do
     if [ -d $a -a ! -L $a ]; then
-        for b in ${a}*.jigdo; do
+        for b in ${a}/*.jigdo; do
             c=`basename $b .jigdo`
             echo -n "jigiting ${c}.iso..." >> $LOGDIR/uburelease.log
-            mkimage -m Debian=$ARCHIVE -f ${a}MD5SUMS -j ${a}${c}.jigdo -t ${a}${c}.template -o ${a}.${c}.iso >> $LOGDIR/uburelease.log 2>/dev/null
-            if [ -s ${a}.${c}.iso ]; then
-                mv ${a}.${c}.iso ${a}${c}.iso;
+            mkimage -m Debian=$ARCHIVE -f ${a}/MD5SUMS -j ${a}/${c}.jigdo -t ${a}/${c}.template -o ${a}/.${c}.iso >> $LOGDIR/uburelease.log 2>/dev/null
+            if [ -s ${a}/.${c}.iso ]; then
+                mv ${a}/.${c}.iso ${a}/${c}.iso;
                 echo " Successful!" >> $LOGDIR/uburelease.log;
             else
                 echo " Failed!" >> $LOGDIR/uburelease.log;
