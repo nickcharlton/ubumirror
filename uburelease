@@ -50,7 +50,7 @@ echo -n "Done at " >> $LOGDIR/uburelease.log
 date >> $LOGDIR/uburelease.log && echo "" >> $LOGDIR/uburelease.log
 echo "Generating images for alternate CDs..." >> $LOGDIR/uburelease.log
 
-for a in ${RELEASE}*; do
+for a in ${RELEASE}/*; do
     if [ -d $a -a ! -L $a ]; then
         for b in ${a}*.jigdo; do
             c=`basename $b .jigdo`
@@ -84,3 +84,4 @@ fi
 echo -n "Done at " >> $LOGDIR/uburelease.log
 date >> $LOGDIR/uburelease.log && echo "" >> $LOGDIR/uburelease.log
 rm -f $LOCK > /dev/null 2>&1
+date -u > "${RELEASE}/.trace/${HOSTNAME}"
