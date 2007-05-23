@@ -12,8 +12,8 @@ if [ ! "$1" = "" ]; then
   SPEED="$1"
 fi
 
-#HOSTNAME=`hostname -f`
-HOSTNAME=mirror.nafallo.info
+# Set your FQDN here
+HOSTNAME=`hostname -f`
 
 LOCK="${RELEASE}/Archive-Update-in-Progress-${HOSTNAME}"
 
