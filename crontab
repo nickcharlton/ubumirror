@@ -1,4 +1,4 @@
 03 */6 * * * ubumirror /home/ubumirror/ubuarchive >/dev/null
 03 11 * * * ubumirror /home/ubumirror/ubucdimage >/dev/null
 03 15 */7 * * ubumirror /home/ubumirror/uburelease >/dev/null
-04 55 */7 * * ubumirror /home/ubumirror/ubudvd >/dev/null
+03 16 */7 * * ubumirror /home/ubumirror/ubudvd >/dev/null
