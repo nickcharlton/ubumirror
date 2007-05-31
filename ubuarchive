@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 set -e
 
 if [ ! -f $HOME/ubumirror.conf ]; then
@@ -34,7 +34,7 @@ date >> $LOGDIR/ubuarchive.log
 
 set +e
 echo "First sync without dists and indices..." >> $LOGDIR/ubuarchive.log
-rsync -rLtvHz --timeout=600 --partial --bwlimit=$SPEED \
+rsync -av --timeout=600 --partial --bwlimit=$SPEED \
       --delete --delete-after \
       --exclude "indices/" --exclude "dists/" \
       --exclude "Archive-Update-in-Progress-${HOSTNAME}" \
@@ -52,7 +52,7 @@ echo -n "Done at " >> $LOGDIR/ubuarchive.log
 date >> $LOGDIR/ubuarchive.log && echo "" >> $LOGDIR/ubuarchive.log
 
 echo "Second sync without pool..." >> $LOGDIR/ubuarchive.log
-rsync -rltvHz --timeout=600 --partial --bwlimit=$SPEED \
+rsync -av --timeout=600 --partial --bwlimit=$SPEED \
       --delete --delete-after --exclude "pool/" \
       --exclude "Archive-Update-in-Progress-${HOSTNAME}" \
       --exclude "project/trace/${HOSTNAME}" \
