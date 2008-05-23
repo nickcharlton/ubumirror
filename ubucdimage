@@ -32,10 +32,8 @@ date >> $LOGDIR/ubucdimage.log
 
 set +e
 echo "Syncing alternate ISOs..." >> $LOGDIR/ubucdimage.log
-rsync -av --partial --timeout=600 --bwlimit=$SPEED \
-      --exclude edubuntu/ --exclude favicon.ico --exclude kubuntu/ \
-	  --exclude ports/ --exclude releases/ --exclude ubuntu-server \
-	  --exclude xubuntu $CD_EXCLUDE \
+rsync -av --partial --timeout=600 \
+	  $CD_EXCLUDE \
       $CD_HOST::$CD_DIR/daily/current/ $ALTERNATE >> $LOGDIR/ubucdimage.log 2>&1
 
 if [ `grep -c '^total size is' $LOGDIR/ubucdimage.log ` -ne 1 ]; then
@@ -48,10 +46,8 @@ fi
 echo -n "Done at " >> $LOGDIR/ubucdimage.log
 date >> $LOGDIR/ubucdimage.log && echo "" >> $LOGDIR/ubucdimage.log
 echo "Syncing desktop ISOs..." >> $LOGDIR/ubucdimage.log
-rsync -av --partial --timeout=600 --bwlimit=$SPEED \
-      --exclude edubuntu/ --exclude favicon.ico --exclude kubuntu/
-      --exclude ports/ --exclude releases/ --exclude ubuntu-server \
-      --exclude xubuntu $CD_EXCLUDE \
+rsync -av --partial --timeout=600 \
+      $CD_EXCLUDE \
       $CD_HOST::$CD_DIR/daily-live/current/ $DESKTOP >> $LOGDIR/ubucdimage.log 2>&1
 
 if [ `grep -c '^total size is' $LOGDIR/ubucdimage.log ` -ne 2 ]; then

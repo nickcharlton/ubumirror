@@ -29,8 +29,8 @@ date >> $LOGDIR/ubudvd.log
 
 set +e
 echo "Syncing ISOs..." >> $LOGDIR/ubudvd.log
-rsync -av --partial --timeout=600 --bwlimit=$SPEED \
-      --exclude daily/ --exclude daily-live/ $DVD_EXCLUDE \
+rsync -av --partial --timeout=600 \
+      $DVD_EXCLUDE \
       $DVD_HOST::$DVD_DIR/ $CDIMAGE >> $LOGDIR/ubudvd.log 2>&1
 
 if [ `grep -c '^total size is' $LOGDIR/ubudvd.log ` -ne 1 ]; then
