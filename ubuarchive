@@ -8,17 +8,12 @@ fi
 
 . $HOME/ubumirror.conf
 
-if [ ! "$1" = "" ]; then
-  SPEED="$1"
-fi
-
 # Set the FQDN for your mirror here
 HOSTNAME=`hostname -f`
 
 LOCK="${ARCHIVE}/Archive-Update-in-Progress-${HOSTNAME}"
 
 # Get in the right directory and set the umask
-# 
 cd $HOME
 umask 022
 
