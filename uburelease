@@ -42,6 +42,7 @@ fi
 
 echo -n "Done at " >> $LOGDIR/uburelease.log
 date >> $LOGDIR/uburelease.log && echo "" >> $LOGDIR/uburelease.log
+if [ -n $ARCHIVE ]; then
 echo "Generating images for alternate CDs..." >> $LOGDIR/uburelease.log
 
 for a in ${RELEASE}/*; do
@@ -62,6 +63,7 @@ done
 
 echo -n "Done at " >> $LOGDIR/uburelease.log
 date >> $LOGDIR/uburelease.log && echo "" >> $LOGDIR/uburelease.log
+fi
 echo "Syncing ISOs..." >> $LOGDIR/uburelease.log
 rsync -av --partial --timeout=600 \
       $RE_EXCLUDE \
