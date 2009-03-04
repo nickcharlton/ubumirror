@@ -8,9 +8,6 @@ fi
 
 . $HOME/ubumirror.conf
 
-# Set your FQDN here
-HOSTNAME=`hostname -f`
-
 LOCK="${CDIMAGE}/Archive-Update-in-Progress-${HOSTNAME}"
 
 ALTERNATE="${CDIMAGE}/daily/"

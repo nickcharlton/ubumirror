@@ -8,9 +8,6 @@ fi
 
 . $HOME/ubumirror.conf
 
-# Set your FQDN here
-HOSTNAME=`hostname -f`
-
 LOCK="${CDIMAGE}/Archive-Update-in-Progress-${HOSTNAME}"
 
 # Get in the right directory and set the umask to be group writable
