@@ -47,6 +47,7 @@ date >> $LOGDIR/uburelease.log
 set +e
 echo "Syncing files needed to use jigit..." >> $LOGDIR/uburelease.log
 rsync -av --timeout=600 --exclude *.iso --exclude jigit/ \
+      --bwlimit=$SPEED \
       $RE_EXCLUDE \
       $RE_HOST::$RE_DIR/ $RELEASE >> $LOGDIR/uburelease.log 2>&1
 
@@ -83,6 +84,7 @@ date >> $LOGDIR/uburelease.log && echo "" >> $LOGDIR/uburelease.log
 fi
 echo "Syncing ISOs..." >> $LOGDIR/uburelease.log
 rsync -av --partial --timeout=600 \
+      --bwlimit=$SPEED \
       $RE_EXCLUDE \
       $RE_HOST::$RE_DIR/ $RELEASE >> $LOGDIR/uburelease.log 2>&1
 

@@ -50,6 +50,7 @@ date >> $LOGDIR/ubucdimage.log
 set +e
 echo "Syncing alternate ISOs..." >> $LOGDIR/ubucdimage.log
 rsync -av --partial --timeout=600 \
+      --bwlimit=$SPEED \
 	  $CD_EXCLUDE \
       $CD_HOST::$CD_DIR/daily/current/ $ALTERNATE >> $LOGDIR/ubucdimage.log 2>&1
 
@@ -64,6 +65,7 @@ echo -n "Done at " >> $LOGDIR/ubucdimage.log
 date >> $LOGDIR/ubucdimage.log && echo "" >> $LOGDIR/ubucdimage.log
 echo "Syncing desktop ISOs..." >> $LOGDIR/ubucdimage.log
 rsync -av --partial --timeout=600 \
+      --bwlimit=$SPEED \
       $CD_EXCLUDE \
       $CD_HOST::$CD_DIR/daily-live/current/ $DESKTOP >> $LOGDIR/ubucdimage.log 2>&1
 
