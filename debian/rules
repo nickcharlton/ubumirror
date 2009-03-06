@@ -5,7 +5,7 @@
 
 build: build-stamp
 
-build-stamp: patch
+build-stamp:
 	dh_testdir
 	touch build-stamp
 
@@ -24,8 +24,6 @@ install: build
 	install -m 0755 ubu* debian/ubumirror/usr/bin/
 
 binary-indep: build install
-
-binary-arch: build install
 	dh_testdir
 	dh_testroot
 	dh_installchangelogs
@@ -40,5 +38,5 @@ binary-arch: build install
 	dh_md5sums
 	dh_builddeb
 
-binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install
+binary: binary-indep
+.PHONY: build clean binary-indep binary install

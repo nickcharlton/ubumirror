@@ -9,7 +9,8 @@ Homepage: https://launchpad.net/ubumirror
 
 Package: ubumirror
 Architecture: all
-Depends: rsync, cron
+Depends: cron, jigit, procmail, rsync
+Recommends: postfix | mail-transport-agent
 Description: Ubuntu mirror scripts
  This packages contains scripts for mirroring various parts of the Ubuntu
  infrastructure.
