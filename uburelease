@@ -51,7 +51,7 @@ rsync -av --timeout=600 --exclude *.iso --exclude jigit/ \
       $RE_EXCLUDE \
       $RE_HOST::$RE_DIR/ $RELEASE >> $LOGDIR/uburelease.log 2>&1
 
-if [ `grep -c '^total size is' $LOGDIR/uburelease.log ` -ne 1 ]; then
+if [ $? -ne 0 ]; then
         ( echo "Eeek. Ubuntu jigdo rsync broke down... Check logs.."; \
           egrep '^write failed|@ERROR' $LOGDIR/uburelease.log ) | mail -s "Ubuntu release sync failed" $EMAIL
         echo "Eeek. Ubuntu jigdo rsync broke down..." >> $LOGDIR/uburelease.log
@@ -88,7 +88,7 @@ rsync -av --partial --timeout=600 \
       $RE_EXCLUDE \
       $RE_HOST::$RE_DIR/ $RELEASE >> $LOGDIR/uburelease.log 2>&1
 
-if [ `grep -c '^total size is' $LOGDIR/uburelease.log ` -ne 2 ]; then
+if [ $? -ne 0 ]; then
         ( echo "Eeek. Ubuntu iso rsync broke down... Check logs.."; \
           egrep '^write failed|@ERROR' $LOGDIR/uburelease.log ) | mail -s "Ubuntu release sync failed" $EMAIL
         echo "Eeek. Ubuntu iso rsync broke down..." >> $LOGDIR/uburelease.log

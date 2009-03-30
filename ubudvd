@@ -51,7 +51,7 @@ rsync -av --partial --timeout=600 \
       $DVD_EXCLUDE \
       $DVD_HOST::$DVD_DIR/ $CDIMAGE >> $LOGDIR/ubudvd.log 2>&1
 
-if [ `grep -c '^total size is' $LOGDIR/ubudvd.log ` -ne 1 ]; then
+if [ $? -ne 0 ]; then
         ( echo "Eeek. Ubuntu iso rsync broke down... Check logs.."; \
           egrep '^write failed|@ERROR' $LOGDIR/ubudvd.log ) | mail -s "Ubuntu dvd sync failed" $EMAIL
         echo "Eeek. Ubuntu iso rsync broke down..." >> $LOGDIR/ubudvd.log

@@ -54,7 +54,7 @@ rsync -av --partial --timeout=600 \
 	  $CD_EXCLUDE \
       $CD_HOST::$CD_DIR/daily/current/ $ALTERNATE >> $LOGDIR/ubucdimage.log 2>&1
 
-if [ `grep -c '^total size is' $LOGDIR/ubucdimage.log ` -ne 1 ]; then
+if [ $? -ne 0 ]; then
         ( echo "Eeek. Ubuntu alternate rsync broke down... Check logs.."; \
           egrep '^write failed|@ERROR' $LOGDIR/ubucdimage.log ) | mail -s "Ubuntu cdimage sync failed" $EMAIL
         echo "Eeek. Ubuntu alternate rsync broke down..." >> $LOGDIR/ubucdimage.log
@@ -69,7 +69,7 @@ rsync -av --partial --timeout=600 \
       $CD_EXCLUDE \
       $CD_HOST::$CD_DIR/daily-live/current/ $DESKTOP >> $LOGDIR/ubucdimage.log 2>&1
 
-if [ `grep -c '^total size is' $LOGDIR/ubucdimage.log ` -ne 2 ]; then
+if [ $? -ne 0 ]; then
         ( echo "Eeek. Ubuntu desktop rsync broke down... Check logs.."; \
           egrep '^write failed|@ERROR' $LOGDIR/ubucdimage.log ) | mail -s "Ubuntu cdimage sync failed" $EMAIL
         echo "Eeek. Ubuntu desktop rsync broke down..." >> $LOGDIR/ubucdimage.log

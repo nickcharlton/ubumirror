@@ -54,12 +54,13 @@ rsync -av --timeout=600 --partial --delete --delete-after \
       $AR_EXCLUDE \
       $AR_HOST::$AR_DIR/ $ARCHIVE/ >> $LOGDIR/ubuarchive.log 2>&1
 
-if [ `grep -c '^total size is' $LOGDIR/ubuarchive.log ` -ne 1 ]; then
+if [ $? -ne 0 ]; then
 	( echo "Eeek. First rsync to ubuntu broke down... Check logs.."; \
 	  egrep '^write failed|@ERROR' $LOGDIR/ubuarchive.log ) | mail -s "Ubuntu archive sync failed" $EMAIL
 	echo "Eeek. First rsync to ubuntu broke down..." >> $LOGDIR/ubuarchive.log
 	exit 1
 fi
+
 echo -n "Done at " >> $LOGDIR/ubuarchive.log
 date >> $LOGDIR/ubuarchive.log && echo "" >> $LOGDIR/ubuarchive.log
 
@@ -71,7 +72,7 @@ rsync -av --timeout=600 --partial --delete --delete-after \
       $AR_EXCLUDE \
       $AR_HOST::$AR_DIR/ $ARCHIVE/ >> $LOGDIR/ubuarchive.log 2>&1
 
-if [ `grep -c '^total size is' $LOGDIR/ubuarchive.log ` -ne 2 ]; then
+if [ $? -ne 0 ]; then
 	( echo "Eeek. Second rsync to ubuntu broke down... Check logs.."; \
 	  grep '@ERROR' $LOGDIR/ubuarchive.log ) | mail -s "Ubuntu archive sync failed" $EMAIL
 	echo "Eeek. Second rsync to ubuntu broke down..." >> $LOGDIR/ubuarchive.log
