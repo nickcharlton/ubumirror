@@ -28,10 +28,10 @@ fi
 
 . /etc/ubumirror.conf
 
-LOCK="${UMCDIMAGE}/Archive-Update-in-Progress-${HOSTNAME}"
+LOCK="${UBUCDI_DIR}/Archive-Update-in-Progress-${HOSTNAME}"
 
-ALTERNATE="${UMCDIMAGE}/daily/"
-DESKTOP="${UMCDIMAGE}/daily-live/"
+UBUALTN="${UBUCDI_DIR}/daily/"
+UBULIVE="${UBUCDI_DIR}/daily-live/"
 
 # Get in the right directory and set the umask to be group writable
 cd $HOME
@@ -51,8 +51,8 @@ set +e
 echo "Syncing alternate ISOs..." >> $LOGDIR/ubucdimage.log
 rsync -av --partial --timeout=600 \
       --bwlimit=$SPEED \
-	  $UMC_EXCLUDE \
-      $UMC_MIRROR/daily/current/ $ALTERNATE >> $LOGDIR/ubucdimage.log 2>&1
+	  $UBUCDI_EXCLUDE \
+      $UBUCDI_MIRROR/daily/current/ $UBUALTN >> $LOGDIR/ubucdimage.log 2>&1
 
 if [ $? -ne 0 ]; then
         ( echo "Eeek. Ubuntu alternate rsync broke down... Check logs.."; \
@@ -66,8 +66,8 @@ date >> $LOGDIR/ubucdimage.log && echo "" >> $LOGDIR/ubucdimage.log
 echo "Syncing desktop ISOs..." >> $LOGDIR/ubucdimage.log
 rsync -av --partial --timeout=600 \
       --bwlimit=$SPEED \
-      $UMC_EXCLUDE \
-      $UMC_MIRROR/daily-live/current/ $DESKTOP >> $LOGDIR/ubucdimage.log 2>&1
+      $UBUCDI_EXCLUDE \
+      $UBUCDI_MIRROR/daily-live/current/ $UBULIVE >> $LOGDIR/ubucdimage.log 2>&1
 
 if [ $? -ne 0 ]; then
         ( echo "Eeek. Ubuntu desktop rsync broke down... Check logs.."; \

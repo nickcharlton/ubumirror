@@ -28,7 +28,7 @@ fi
 
 . /etc/ubumirror.conf
 
-LOCK="${UMARCHIVE}/Archive-Update-in-Progress-${HOSTNAME}"
+LOCK="${UBUARC_DIR}/Archive-Update-in-Progress-${HOSTNAME}"
 
 # Get in the right directory and set the umask
 cd $HOME
@@ -51,8 +51,8 @@ rsync -av --timeout=600 --partial --delete --delete-after \
       --exclude "indices/" --exclude "dists/" \
       --exclude "project/trace/${HOSTNAME}" \
       --exclude "Archive-Update-in-Progress-${HOSTNAME}" \
-      $UMA_EXCLUDE \
-      $UMA_MIRROR $UMARCHIVE/ >> $LOGDIR/ubuarchive.log 2>&1
+      $UBUARC_EXCLUDE \
+      $UBUARC_MIRROR $UBUARC_DIR >> $LOGDIR/ubuarchive.log 2>&1
 
 if [ $? -ne 0 ]; then
 	( echo "Eeek. First rsync to ubuntu broke down... Check logs.."; \
@@ -69,8 +69,8 @@ rsync -av --timeout=600 --partial --delete --delete-after \
       --bwlimit=$SPEED \
       --exclude "pool/" --exclude "project/trace/${HOSTNAME}" \
       --exclude "Archive-Update-in-Progress-${HOSTNAME}" \
-      $UMA_EXCLUDE \
-      $UMA_MIRROR $UMARCHIVE/ >> $LOGDIR/ubuarchive.log 2>&1
+      $UBUARC_EXCLUDE \
+      $UBUARC_MIRROR $UBUARC_DIR >> $LOGDIR/ubuarchive.log 2>&1
 
 if [ $? -ne 0 ]; then
 	( echo "Eeek. Second rsync to ubuntu broke down... Check logs.."; \
@@ -79,6 +79,6 @@ if [ $? -ne 0 ]; then
 	exit 2
 fi
 
-find $UMARCHIVE/ -type l -xtype l | xargs -r rm
+find $UBUARC_DIR -type l -xtype l | xargs -r rm
 rm -f $LOCK > /dev/null 2>&1
-date -u > "${UMARCHIVE}/project/trace/${HOSTNAME}"
+date -u > "${UBUARC_DIR}/project/trace/${HOSTNAME}"
