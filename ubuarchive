@@ -35,10 +35,16 @@ cd $HOME
 umask 022
 
 # Check to see if another sync is in progress
-if lockfile -! -l 43200 -r 0 "$LOCK"; then
-  echo ${HOSTNAME} is unable to start rsync, lock file exists
-  exit 1
+if ! ( set -o noclobber; echo "$$" > "${LOCK}") 2> /dev/null; then
+        if ! $(kill -0 $(cat ${LOCK}) 2>/dev/null); then
+                # Process does either not exist or is not owned by us.
+                echo "$$" > "${LOCK}"
+        else
+                echo "Unable to start rsync, lock file still exists, PID $(cat ${LOCK})."
+                exit 1
+        fi
 fi
+
 trap 'rm -f $LOCK > /dev/null 2>&1; echo -n "Done at " >> $LOGDIR/ubuarchive.log; date >> $LOGDIR/ubuarchive.log; savelog -n $LOGDIR/ubuarchive.log > /dev/null' EXIT
 
 echo -n "Starting at " > $LOGDIR/ubuarchive.log
