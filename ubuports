@@ -1,0 +1,90 @@
+#!/bin/sh
+#
+#   ubuarchive - provides an easy way to sync packages from an Ubuntu
+#                archive mirror.
+#
+#   Copyright (C) 2006 - 2009 Nafallo Bjälevik
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+set -e
+
+if [ ! -f /etc/ubumirror.conf ]; then
+	echo "File /etc/ubumirror.conf does not exist!"
+	exit 2
+fi
+
+. /etc/ubumirror.conf
+
+LOCK="${UBUPOR_DIR}/Archive-Update-in-Progress-${HOSTNAME}"
+
+# Get in the right directory and set the umask
+cd $HOME
+umask 022
+
+# Check to see if another sync is in progress
+if ! ( set -o noclobber; echo "$$" > "${LOCK}") 2> /dev/null; then
+        if ! $(kill -0 $(cat ${LOCK}) 2>/dev/null); then
+                # Process does either not exist or is not owned by us.
+                echo "$$" > "${LOCK}"
+        else
+                echo "Unable to start rsync, lock file still exists, PID $(cat ${LOCK})."
+                exit 1
+        fi
+fi
+
+trap 'rm -f $LOCK > /dev/null 2>&1; echo -n "Done at " >> $LOGDIR/ubuports.log; date >> $LOGDIR/ubuports.log; savelog -n $LOGDIR/ubuports.log > /dev/null' EXIT
+
+echo -n "Starting at " > $LOGDIR/ubuports.log
+date >> $LOGDIR/ubuports.log
+
+set +e
+echo "First sync without dists and indices..." >> $LOGDIR/ubuports.log
+rsync -av --timeout=600 --partial --delete --delete-after \
+      --bwlimit=$SPEED \
+      --exclude "indices/" --exclude "dists/" \
+      --exclude "project/trace/${HOSTNAME}" \
+      --exclude "Archive-Update-in-Progress-${HOSTNAME}" \
+      $UBUPOR_EXCLUDE \
+      $UBUPOR_MIRROR $UBUPOR_DIR >> $LOGDIR/ubuports.log 2>&1
+
+if [ $? -ne 0 ]; then
+	( echo "Eeek. First rsync to ubuntu broke down... Check logs.."; \
+	  egrep '^write failed|@ERROR' $LOGDIR/ubuports.log ) | mail -s "Ubuntu ports sync failed" $EMAIL
+	echo "Eeek. First rsync to ubuntu broke down..." >> $LOGDIR/ubuports.log
+	exit 1
+fi
+
+echo -n "Done at " >> $LOGDIR/ubuports.log
+date >> $LOGDIR/ubuports.log && echo "" >> $LOGDIR/ubuports.log
+
+echo "Second sync without pool..." >> $LOGDIR/ubuports.log
+rsync -av --timeout=600 --partial --delete --delete-after \
+      --bwlimit=$SPEED \
+      --exclude "pool/" --exclude "project/trace/${HOSTNAME}" \
+      --exclude "Archive-Update-in-Progress-${HOSTNAME}" \
+      $UBUPOR_EXCLUDE \
+      $UBUPOR_MIRROR $UBUPOR_DIR >> $LOGDIR/ubuports.log 2>&1
+
+if [ $? -ne 0 ]; then
+	( echo "Eeek. Second rsync to ubuntu broke down... Check logs.."; \
+	  grep '@ERROR' $LOGDIR/ubuarchive.log ) | mail -s "Ubuntu ports sync failed" $EMAIL
+	echo "Eeek. Second rsync to ubuntu broke down..." >> $LOGDIR/ubuports.log
+	exit 2
+fi
+
+find $UBUPOR_DIR -type l -xtype l | xargs -r rm
+rm -f $LOCK > /dev/null 2>&1
+date -u > "${UBUPOR_DIR}/project/trace/${HOSTNAME}"
