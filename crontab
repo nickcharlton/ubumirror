@@ -1,7 +1,8 @@
+# https://wiki.ubuntu.com/Mirrors
 # Update archive mirror every six hours.
 03 */6 * * * ubumirror /usr/bin/ubuarchive >/dev/null
 # Update releases mirror every 24 hours.
-03 * * * * ubumirror /usr/bin/uburelease >/dev/null
+03 */4 * * * ubumirror /usr/bin/uburelease >/dev/null
 # Update cdimage mirror every 7 days.
 03 11 */7 * * ubumirror /usr/bin/ubucdimage >/dev/null
 # Update dvd mirror every 7 days.
