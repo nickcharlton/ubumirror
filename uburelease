@@ -100,7 +100,7 @@ if [ $? -ne 0 ]; then
         exit 2
 fi
 
-echo -n "Done at $(date)" >> $LOGDIR/uburelease.log
+echo "Done at $(date)" >> $LOGDIR/uburelease.log
 
 rm -f $LOCK > /dev/null 2>&1
 date -u > "${UBUREL_DIR}/.trace/${HOSTNAME}"
