@@ -45,7 +45,7 @@ if ! ( set -o noclobber; echo "$$" > "${LOCK}") 2> /dev/null; then
         fi
 fi
 
-trap 'rm -f $LOCK > /dev/null 2>&1; echo -n "Done at " >> $LOGDIR/ubuarchive.log; date >> $LOGDIR/ubuarchive.log; savelog -n $LOGDIR/ubuarchive.log > /dev/null' EXIT
+trap 'rm -f $LOCK > /dev/null 2>&1; echo "Done at $(date)" >> $LOGDIR/ubuarchive.log; savelog -c 28 -n $LOGDIR/ubuarchive.log > /dev/null' EXIT
 
 echo "Starting at $(date)" > $LOGDIR/ubuarchive.log
 
