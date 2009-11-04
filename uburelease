@@ -50,43 +50,6 @@ trap 'rm -f $LOCK > /dev/null 2>&1; echo "Done at $(date)" >> $LOGDIR/uburelease
 echo "Starting at $(date)" >> $LOGDIR/uburelease.log
 
 set +e
-echo "Syncing files needed to use jigit..." >> $LOGDIR/uburelease.log
-rsync -av --timeout=600 --exclude *.iso --exclude jigit/ \
-      --bwlimit=$SPEED \
-      $UBUREL_EXCLUDE \
-      $UBUREL_MIRROR $UBUREL_DIR >> $LOGDIR/uburelease.log 2>&1
-
-if [ $? -ne 0 ]; then
-        ( echo "Eeek. Ubuntu jigdo rsync broke down... Check logs.."; \
-          egrep '^write failed|@ERROR' $LOGDIR/uburelease.log ) | mail -s "Ubuntu release sync failed" $EMAIL
-        echo "Eeek. Ubuntu jigdo rsync broke down..." >> $LOGDIR/uburelease.log
-        exit 1
-fi
-
-echo "Done at $(date)" >> $LOGDIR/uburelease.log
-
-if [ -n $UBUARC_DIR -a -x /usr/bin/jigit ]; then
-echo "Generating images for alternate CDs..." >> $LOGDIR/uburelease.log
-
-for a in ${UBUREL_DIR}/*; do
-    if [ -d $a -a ! -L $a ]; then
-        for b in ${a}/*.jigdo; do
-            c=`basename $b .jigdo`
-            echo -n "jigiting ${c}.iso..." >> $LOGDIR/uburelease.log
-            mkimage -m Debian=$UBUARC_DIR -f ${a}/MD5SUMS -j ${a}/${c}.jigdo -t ${a}/${c}.template -o ${a}/.${c}.iso >> $LOGDIR/uburelease.log 2>/dev/null
-            if [ -s ${a}/.${c}.iso ]; then
-                mv ${a}/.${c}.iso ${a}/${c}.iso;
-                echo " Successful!" >> $LOGDIR/uburelease.log;
-            else
-                echo " Failed!" >> $LOGDIR/uburelease.log;
-            fi
-        done
-    fi
-done
-
-echo -n "Done at $(date)" >> $LOGDIR/uburelease.log
-fi
-
 echo "Syncing ISOs..." >> $LOGDIR/uburelease.log
 rsync -av --partial --timeout=600 \
       --bwlimit=$SPEED \
@@ -97,7 +60,7 @@ if [ $? -ne 0 ]; then
         ( echo "Eeek. Ubuntu iso rsync broke down... Check logs.."; \
           egrep '^write failed|@ERROR' $LOGDIR/uburelease.log ) | mail -s "Ubuntu release sync failed" $EMAIL
         echo "Eeek. Ubuntu iso rsync broke down..." >> $LOGDIR/uburelease.log
-        exit 2
+        exit 1
 fi
 
 echo "Done at $(date)" >> $LOGDIR/uburelease.log
