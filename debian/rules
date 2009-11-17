@@ -21,13 +21,15 @@ install: build
 	dh_clean -k
 	dh_installdirs
 	# Copy over scripts to the /usr/bin directory.
-	install -m 0755 ubu* debian/ubumirror/usr/bin/
+	install -m 0755 ubuarchive ubucdimage ubudvd ubuports uburelease \
+		debian/ubumirror/usr/bin/
 
 binary-indep: build install
 	dh_testdir
 	dh_testroot
 	dh_installchangelogs
 	dh_installdocs
+	dh_installexamples
 	dh_install
 	dh_strip
 	dh_compress
