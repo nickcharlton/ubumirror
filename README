@@ -40,3 +40,17 @@ The following scripts come with the ubumirror package:
  + ubudvd: sync DVD images fomr an Ubuntu cdimage mirror.
  + ubuports: sync packages from an Ubuntu ports mirror (ports.ubuntu.com).
  + uburelease: sync CD images from an Ubuntu releases mirror.
+
+ Contact
+ -------
+
+These are the official mailing lists for Ubuntu mirrors:
+
+ - http://lists.ubuntu.com/mailman/listinfo/ubuntu-mirrors - for announcements,
+   feedback and discussion for Ubuntu mirror maintainers.
+ - http://lists.ubuntu.com/mailman/listinfo/ubuntu-mirrors-announce - Ubuntu
+   Mirror Announcement list.
+
+Should you wish to contact the Ubuntu Mirror Admin team, please email:
+
+ - mirrors@ubuntu.com
