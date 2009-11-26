@@ -35,7 +35,7 @@ Should you wish to register you're own Ubuntu mirror, please do so here:
 
 The following scripts come with the ubumirror package:
 
- + ubuarchive:
- + ubucdimage:
- + ubuports:
- + uburelease:
+ + ubuarchive: sync packages from an Ubuntu archive mirror.
+ + ubucdimage: sync CD images from an Ubuntu cdimage mirror (cdimage.ubuntu.com).
+ + ubuports: sync packages from an Ubuntu ports mirror (ports.ubuntu.com).
+ + uburelease: sync CD images from an Ubuntu releases mirror.
