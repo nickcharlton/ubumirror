@@ -37,5 +37,6 @@ The following scripts come with the ubumirror package:
 
  + ubuarchive: sync packages from an Ubuntu archive mirror.
  + ubucdimage: sync CD images from an Ubuntu cdimage mirror (cdimage.ubuntu.com).
+ + ubudvd: sync DVD images fomr an Ubuntu cdimage mirror.
  + ubuports: sync packages from an Ubuntu ports mirror (ports.ubuntu.com).
  + uburelease: sync CD images from an Ubuntu releases mirror.
