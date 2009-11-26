@@ -14,6 +14,22 @@ available at the Ubuntu Wiki at this page:
  - https://wiki.ubuntu.com/Mirrors
  - http://www.ubuntu.com/getubuntu/mirror
 
+ Listings of Ubuntu Mirrors
+ --------------------------
+
+Listings of Ubuntu mirrors are maintained on Launchpad. This is split into two
+sections, one for archive mirrors (mirrors of archive.ubuntu.com):
+
+ - https://launchpad.net/ubuntu/+archivemirrors
+
+Mirrors of the official Ubuntu CD images server (releases.ubuntu.com)
+
+ - https://launchpad.net/ubuntu/+cdmirrors
+
+Should you wish to register you're own Ubuntu mirror, please do so here:
+
+ - https://launchpad.net/ubuntu/+newmirror
+
  Scripts included
  ----------------
 
