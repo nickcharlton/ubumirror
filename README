@@ -26,7 +26,7 @@ Mirrors of the official Ubuntu CD images server (releases.ubuntu.com)
 
  - https://launchpad.net/ubuntu/+cdmirrors
 
-Should you wish to register you're own Ubuntu mirror, please do so here:
+Should you wish to register your own Ubuntu mirror, please do so here:
 
  - https://launchpad.net/ubuntu/+newmirror
 
@@ -62,7 +62,8 @@ comment out the scripts that you do not wish to use in this file.
  Contact
  -------
 
-These are the official mailing lists for Ubuntu mirrors:
+These are the official mailing lists for Ubuntu mirrors, it is recommended that
+you subscribe to these lists:
 
  - http://lists.ubuntu.com/mailman/listinfo/ubuntu-mirrors - for announcements,
    feedback and discussion for Ubuntu mirror maintainers.
