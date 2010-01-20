@@ -1,0 +1,75 @@
+                                   _                     _                    
+                             _   _| |__  _   _ _ __ ___ (_)_ __ _ __ ___  _ __ 
+                            | | | | '_ \| | | | '_ ` _ \| | '__| '__/ _ \| '__|
+                            | |_| | |_) | |_| | | | | | | | |  | | | (_) | |  
+                             \__,_|_.__/ \__,_|_| |_| |_|_|_|  |_|  \___/|_|  
+                            +++++++++++++++++++++++++++++++++++++++++++++++++++
+
+ Information about Ubuntu mirroring
+ ----------------------------------
+
+If it is information about Ubuntu mirroring you're looking for, resources are
+available at the Ubuntu Wiki at this page:
+
+ - https://wiki.ubuntu.com/Mirrors
+ - http://www.ubuntu.com/getubuntu/mirror
+
+ Listings of Ubuntu Mirrors
+ --------------------------
+
+Listings of Ubuntu mirrors are maintained on Launchpad. This is split into two
+sections, one for archive mirrors (mirrors of archive.ubuntu.com):
+
+ - https://launchpad.net/ubuntu/+archivemirrors
+
+Mirrors of the official Ubuntu CD images server (releases.ubuntu.com)
+
+ - https://launchpad.net/ubuntu/+cdmirrors
+
+Should you wish to register your own Ubuntu mirror, please do so here:
+
+ - https://launchpad.net/ubuntu/+newmirror
+
+ Scripts included
+ ----------------
+
+The following scripts come with the ubumirror package:
+
+ + ubuarchive: sync packages from an Ubuntu archive mirror.
+ + ubucdimage: sync CD images from an Ubuntu cdimage mirror (cdimage.ubuntu.com).
+ + ubudvd: sync DVD images fomr an Ubuntu cdimage mirror.
+ + ubuports: sync packages from an Ubuntu ports mirror (ports.ubuntu.com).
+ + uburelease: sync CD images from an Ubuntu releases mirror.
+
+ Setting up an Ubuntu Mirror with ubumirror
+ ------------------------------------------
+
+Please ensure that you have read and understood the Mirror Guidelines on the
+Ubuntu Wiki page listed above.
+
+This package installs the scripts above to the /usr/bin/ directory, an example
+configuration and crontab file are installed into
+/usr/share/doc/ubumirror/examples/ .
+
+These two files should be edited as you see fit. For the ubumirror.conf file,
+please make sure, if possible, to use a local rsync mirror for your (or a
+nearby) country, instead of using the main archive/releases mirrors. See above
+for Ubuntu mirror listings.
+
+The crontab provided may be installed into the /etc/cron.d/ directory. Please
+comment out the scripts that you do not wish to use in this file.
+
+ Contact
+ -------
+
+These are the official mailing lists for Ubuntu mirrors, it is recommended that
+you subscribe to these lists:
+
+ - http://lists.ubuntu.com/mailman/listinfo/ubuntu-mirrors - for announcements,
+   feedback and discussion for Ubuntu mirror maintainers.
+ - http://lists.ubuntu.com/mailman/listinfo/ubuntu-mirrors-announce - Ubuntu
+   Mirror Announcement list.
+
+Should you wish to contact the Ubuntu Mirror Admin team, please email:
+
+ - mirrors@ubuntu.com
