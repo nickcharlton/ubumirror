@@ -63,7 +63,5 @@ if [ $? -ne 0 ]; then
         exit 1
 fi
 
-echo "Done at $(date)" >> $LOGDIR/uburelease.log
-
 rm -f $LOCK > /dev/null 2>&1
 date -u > "${UBUREL_DIR}/.trace/${HOSTNAME}"
