@@ -1,7 +1,7 @@
 #!/bin/sh
 #
-#   ubucdimage - provides an easy way to sync ISO files from an Ubuntu CD
-#                image mirror.
+#   ubucdimage - provides an easy way to sync daily ISO files from an
+#                Ubuntu CD image mirror.
 #
 #   Copyright (C) 2006 - 2009 Nafallo Bjälevik
 #
