@@ -5,5 +5,3 @@
 03 */4 * * * ubumirror /usr/bin/uburelease >/dev/null
 # Update cdimage mirror every seven days.
 03 11 */7 * * ubumirror /usr/bin/ubucdimage >/dev/null
-# Update dvd mirror every seven days.
-03 16 */7 * * ubumirror /usr/bin/ubudvd >/dev/null
