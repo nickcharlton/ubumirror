@@ -28,6 +28,12 @@ fi
 
 . /etc/ubumirror.conf
 
+if [ -z "$UBUPOR_DIR" ]; then
+    echo -n "No Ubuntu ports target directory (UBUPOR_DIR) set in "
+    echo "/etc/ubumirror.conf."
+    exit 2
+fi
+
 LOCK="${UBUPOR_DIR}/Archive-Update-in-Progress-${HOSTNAME}"
 
 # Get in the right directory and set the umask

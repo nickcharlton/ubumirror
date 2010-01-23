@@ -30,6 +30,12 @@ fi
 
 LOCK="${UBUCDI_DIR}/Archive-Update-in-Progress-${HOSTNAME}"
 
+if [ -z "$UBUCDI_DIR" ]; then
+    echo -n "No Ubuntu cdimage target directory (UBUCDI_DIR) set in "
+    echo "/etc/ubumirror.conf."
+    exit 2
+fi
+
 UBUALTN="${UBUCDI_DIR}/daily/"
 UBULIVE="${UBUCDI_DIR}/daily-live/"
 
