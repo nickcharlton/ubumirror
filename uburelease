@@ -57,8 +57,8 @@ echo "Starting at $(date)" >> $LOGDIR/uburelease.log
 
 set +e
 echo "Syncing ISOs..." >> $LOGDIR/uburelease.log
-rsync -av --partial --timeout=600 \
-      --bwlimit=$SPEED \
+rsync -av --partial --timeout=600 --bwlimit=$SPEED --delete-after \
+      --exclude .trace --exclude Archive-Update-in-Progress-* \
       $UBUREL_EXCLUDE \
       $UBUREL_MIRROR $UBUREL_DIR >> $LOGDIR/uburelease.log 2>&1
 
