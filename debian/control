@@ -4,16 +4,16 @@ Priority: optional
 Maintainer: Jonathan Davies <jpds@ubuntu.com>
 Build-Depends: debhelper (>= 7.0.0)
 Standards-Version: 3.8.0
-XS-Vcs-Bzr: http://bazaar.launchpad.net/~jpds/ubumirror/ubumirror-packaging/
+Vcs-Bzr: http://bazaar.launchpad.net/~ubumirror-devs/ubumirror/trunk
 Homepage: https://launchpad.net/ubumirror
 
 Package: ubumirror
 Architecture: all
-Depends: cron, debianutils,  rsync
+Depends: ${misc:Depends}, cron, rsync
 Recommends: postfix | mail-transport-agent, apache2 | httpd
 Suggests: vsftpd | proftpd
 Description: Ubuntu mirror scripts
- This packages contains scripts for mirroring various parts of the Ubuntu
+ This package contains scripts for mirroring various parts of the Ubuntu
  infrastructure.
  .
  This includes archives packages, ISO files for releases, daily builds for ISO
