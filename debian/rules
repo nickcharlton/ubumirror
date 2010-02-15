@@ -18,7 +18,7 @@ clean:
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k
+	dh_prep
 	dh_installdirs
 	# Copy over scripts to the /usr/bin directory.
 	install -m 0755 ubuarchive ubucdimage ubuports uburelease \
@@ -42,5 +42,8 @@ binary-indep: build install
 	dh_md5sums
 	dh_builddeb
 
+# lintian is unhappy without this empty target
+binary-arch: build install
+
 binary: binary-indep
-.PHONY: build clean binary-indep binary install
+.PHONY: build clean binary-indep binary-arch binary install
