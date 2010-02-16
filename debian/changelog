@@ -1,3 +1,10 @@
+ubumirror (0.1.1ubuntu1) lucid; urgency=low
+
+  * updated to include a default configuration in
+    /etc/ubumirror.conf (thanks to Jonathan Davies)
+
+ -- Michael Vogt <michael.vogt@ubuntu.com>  Tue, 16 Feb 2010 11:30:12 +0100
+
 ubumirror (0.1ubuntu1) lucid; urgency=low
 
   * initial upload into lucid
