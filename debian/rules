@@ -23,6 +23,8 @@ install: build
 	# Copy over scripts to the /usr/bin directory.
 	install -m 0755 ubuarchive ubucdimage ubuports uburelease \
 		debian/ubumirror/usr/bin/
+	# Move configuration file to /etc/ directory.
+	install -m 0644 ubumirror.conf debian/ubumirror/etc/
 
 binary-indep: build install
 	dh_testdir
