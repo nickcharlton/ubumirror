@@ -77,7 +77,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-echo "Ubuntu release CD image sync completed."
+echo "$(date -R): Ubuntu release CD image sync completed."
 
 echo "$(date -R): Releasing lock file..."
 rm -f $LOCK > /dev/null 2>&1
