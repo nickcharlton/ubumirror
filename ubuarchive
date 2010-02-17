@@ -22,11 +22,16 @@
 set -e
 
 if [ ! -f /etc/ubumirror.conf ]; then
-	echo "File /etc/ubumirror.conf does not exist!"
+	echo "Configuration file /etc/ubumirror.conf cannot be found."
 	exit 2
 fi
 
 . /etc/ubumirror.conf
+
+LOGFILE="$LOGDIR/ubuarchive.log"
+
+# Log all activity to file.
+exec >> $LOGFILE 2>&1
 
 if [ -z "$UBUARC_DIR" ]; then
     echo -n "No Ubuntu archive target directory (UBUARC_DIR) set in "
@@ -40,54 +45,58 @@ LOCK="${UBUARC_DIR}/Archive-Update-in-Progress-${HOSTNAME}"
 cd $HOME
 umask 022
 
+echo "$(date -R): Starting Ubuntu archive mirror operations..."
+
 # Check to see if another sync is in progress
 if ! ( set -o noclobber; echo "$$" > "${LOCK}") 2> /dev/null; then
         if ! $(kill -0 $(cat ${LOCK}) 2>/dev/null); then
                 # Process does either not exist or is not owned by us.
                 echo "$$" > "${LOCK}"
         else
-                echo "Unable to start rsync, lock file still exists, PID $(cat ${LOCK})."
+                echo "$(date -R): Unable to start operations, lock file still exists, PID $(cat ${LOCK})."
                 exit 1
         fi
+        echo "$(date -R): Lock established."
 fi
 
-trap 'rm -f $LOCK > /dev/null 2>&1; echo "Done at $(date)" >> $LOGDIR/ubuarchive.log; savelog -c 28 -n $LOGDIR/ubuarchive.log > /dev/null' EXIT
-
-echo "Starting at $(date)" > $LOGDIR/ubuarchive.log
+trap 'rm -f $LOCK > /dev/null 2>&1; echo "$(date -R): Archive mirror operations completed."; savelog -c 28 -n $LOGFILE > /dev/null' EXIT
 
 set +e
-echo "First sync without dists and indices..." >> $LOGDIR/ubuarchive.log
+echo "$(date -R): Initiating Ubuntu archive pool sync..."
 rsync -av --timeout=600 --partial --delete --delete-after \
       --bwlimit=$SPEED \
       --exclude "indices/" --exclude "dists/" \
       --exclude "project/trace/${HOSTNAME}" \
       --exclude "Archive-Update-in-Progress-${HOSTNAME}" \
       $UBUARC_EXCLUDE \
-      $UBUARC_MIRROR $UBUARC_DIR >> $LOGDIR/ubuarchive.log 2>&1
+      $UBUARC_MIRROR $UBUARC_DIR
 
 if [ $? -ne 0 ]; then
-	( echo "Eeek. First rsync to ubuntu broke down... Check logs.."; \
-	  egrep '^write failed|@ERROR' $LOGDIR/ubuarchive.log ) | mail -s "Ubuntu archive sync failed" $EMAIL
-	echo "Eeek. First rsync to ubuntu broke down..." >> $LOGDIR/ubuarchive.log
+	( echo "Archive pool sync failed. Please check logs."; \
+	  egrep '^write failed|@ERROR' $LOGFILE ) | mail -s "Ubuntu archive sync failed" $EMAIL
+	echo "$(date -R): Archive pool sync failed."
 	exit 1
 fi
 
-echo "Done at $(date)" >> $LOGDIR/ubuarchive.log
+echo "$(date -R): Ubuntu archive pool sync completed."
 
-echo "Second sync without pool..." >> $LOGDIR/ubuarchive.log
+echo "$(date -R): Initiating Ubuntu archive dists and indices sync..."
+
 rsync -av --timeout=600 --partial --delete --delete-after \
       --bwlimit=$SPEED \
       --exclude "pool/" --exclude "project/trace/${HOSTNAME}" \
       --exclude "Archive-Update-in-Progress-${HOSTNAME}" \
       $UBUARC_EXCLUDE \
-      $UBUARC_MIRROR $UBUARC_DIR >> $LOGDIR/ubuarchive.log 2>&1
+      $UBUARC_MIRROR $UBUARC_DIR
 
 if [ $? -ne 0 ]; then
-	( echo "Eeek. Second rsync to ubuntu broke down... Check logs.."; \
-	  grep '@ERROR' $LOGDIR/ubuarchive.log ) | mail -s "Ubuntu archive sync failed" $EMAIL
-	echo "Eeek. Second rsync to ubuntu broke down..." >> $LOGDIR/ubuarchive.log
+	( echo "Archive dists and indices sync failed. Please check logs."; \
+	  grep '@ERROR' $LOGFILE ) | mail -s "Ubuntu archive sync failed" $EMAIL
+	echo "$(date -R): Ubuntu archive dists and indices sync failed."
 	exit 2
 fi
+
+echo "$(date -R): Ubuntu archive dists and indices sync completed."
 
 find $UBUARC_DIR -type l -xtype l | xargs -r rm
 rm -f $LOCK > /dev/null 2>&1
