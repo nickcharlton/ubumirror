@@ -1,4 +1,4 @@
-ubumirror (0.1.1ubuntu3) UNRELEASED; urgency=low
+ubumirror (0.1.1ubuntu3) lucid; urgency=low
 
   * Use dh_clean instead of dh_prep in clean:.
   * Rename Vcs-Bzr to XS-Upstream-Vcs-Bzr since Ubuntu uploaders can't
@@ -7,7 +7,7 @@ ubumirror (0.1.1ubuntu3) UNRELEASED; urgency=low
   * Bump up Standards-Version to 3.8.3.
   * Rewrite rules to use dh, debian/*.install, and to drop debian/dirs.
 
- -- Loïc Minier <loic.minier@ubuntu.com>  Tue, 16 Feb 2010 12:19:42 +0100
+ -- Loïc Minier <loic.minier@ubuntu.com>  Wed, 17 Feb 2010 18:06:32 +0100
 
 ubumirror (0.1.1ubuntu2) lucid; urgency=low
 
