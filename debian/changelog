@@ -4,6 +4,7 @@ ubumirror (0.1.1ubuntu3) UNRELEASED; urgency=low
   * Rename Vcs-Bzr to XS-Upstream-Vcs-Bzr since Ubuntu uploaders can't
     commit to it; since lp:ubuntu/ubumirror is derived from the upstream
     branch, it should be easy to resync.
+  * Bump up Standards-Version to 3.8.3.
 
  -- Loïc Minier <loic.minier@ubuntu.com>  Tue, 16 Feb 2010 12:19:42 +0100
 
