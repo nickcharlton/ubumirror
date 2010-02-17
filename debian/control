@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Jonathan Davies <jpds@ubuntu.com>
 Build-Depends: debhelper (>= 7.0.0)
 Standards-Version: 3.8.0
-Vcs-Bzr: http://bazaar.launchpad.net/~ubumirror-devs/ubumirror/trunk
+XS-Upstream-Vcs-Bzr: http://bazaar.launchpad.net/~ubumirror-devs/ubumirror/trunk
 Homepage: https://launchpad.net/ubumirror
 
 Package: ubumirror
