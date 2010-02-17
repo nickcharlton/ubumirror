@@ -41,7 +41,7 @@ fi
 
 LOCK="${UBUPOR_DIR}/Archive-Update-in-Progress-${HOSTNAME}"
 
-trap 'rm -f $LOCK > /dev/null 2>&1; savelog -c 28 -n $LOGDIR/ubuports.log > /dev/null' EXIT
+trap 'rm -f $LOCK > /dev/null 2>&1; savelog -c 28 -n $LOGFILE > /dev/null' EXIT
 
 # Get in the right directory and set the umask
 cd $HOME
