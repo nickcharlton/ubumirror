@@ -5,6 +5,7 @@ ubumirror (0.1.1ubuntu3) UNRELEASED; urgency=low
     commit to it; since lp:ubuntu/ubumirror is derived from the upstream
     branch, it should be easy to resync.
   * Bump up Standards-Version to 3.8.3.
+  * Rewrite rules to use dh, debian/*.install, and to drop debian/dirs.
 
  -- Loïc Minier <loic.minier@ubuntu.com>  Tue, 16 Feb 2010 12:19:42 +0100
 

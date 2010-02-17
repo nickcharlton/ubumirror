@@ -1,49 +1,5 @@
 #!/usr/bin/make -f
-#
-# debian/rules file for the ubumirror package.
-#
 
-build: build-stamp
+%:
+	dh $@
 
-build-stamp:
-	dh_testdir
-	touch build-stamp
-
-clean:
-	dh_testdir
-	dh_testroot
-	rm -f build-stamp
-	dh_clean
-
-install: build
-	dh_testdir
-	dh_testroot
-	dh_prep
-	dh_installdirs
-	# Copy over scripts to the /usr/bin directory.
-	install -m 0755 ubuarchive ubucdimage ubuports uburelease \
-		debian/ubumirror/usr/bin/
-	# Move configuration file to /etc/ directory.
-	install -m 0644 ubumirror.conf debian/ubumirror/etc/
-
-binary-indep: build install
-	dh_testdir
-	dh_testroot
-	dh_installchangelogs
-	dh_installdocs
-	dh_installexamples
-	dh_install
-	dh_strip
-	dh_compress
-	dh_fixperms
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
-
-# lintian is unhappy without this empty target
-binary-arch: build install
-
-binary: binary-indep
-.PHONY: build clean binary-indep binary-arch binary install
