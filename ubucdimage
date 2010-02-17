@@ -22,19 +22,26 @@
 set -e
 
 if [ ! -f /etc/ubumirror.conf ]; then
-	echo "File /etc/ubumirror.conf does not exist!"
-	exit 2
+    echo "Configuration file /etc/ubumirror.conf not found."
+    exit 2
 fi
 
 . /etc/ubumirror.conf
 
-LOCK="${UBUCDI_DIR}/Archive-Update-in-Progress-${HOSTNAME}"
+LOGFILE="$LOGDIR/ubucdimage.log"
+
+# Log all activity to file.
+exec >> $LOGFILE 2>&1
 
 if [ -z "$UBUCDI_DIR" ]; then
     echo -n "No Ubuntu cdimage target directory (UBUCDI_DIR) set in "
     echo "/etc/ubumirror.conf."
     exit 2
 fi
+
+LOCK="${UBUCDI_DIR}/Archive-Update-in-Progress-${HOSTNAME}"
+
+trap 'rm -f $LOCK > /dev/null 2>&1; savelog -c 28 -n $LOGFILE > /dev/null' EXIT
 
 UBUALTN="${UBUCDI_DIR}/daily/"
 UBULIVE="${UBUCDI_DIR}/daily-live/"
@@ -43,48 +50,56 @@ UBULIVE="${UBUCDI_DIR}/daily-live/"
 cd $HOME
 umask 022
 
+echo "$(date -R): Initiating Ubuntu daily CD image mirror operations..."
+
 # Check to see if another sync is in progress
 if ! ( set -o noclobber; echo "$$" > "${LOCK}") 2> /dev/null; then
         if ! $(kill -0 $(cat ${LOCK}) 2>/dev/null); then
                 # Process does either not exist or is not owned by us.
                 echo "$$" > "${LOCK}"
         else
-                echo "Unable to start rsync, lock file still exists, PID $(cat ${LOCK})."
+                echo "$(date -R): Unable to proceed with operations; lock file still exists for PID $(cat ${LOCK})."
                 exit 1
         fi
 fi
 
-trap 'rm -f $LOCK > /dev/null 2>&1; echo "Done at $(date)" >> $LOGDIR/ubucdimage.log; savelog -c 28 -n $LOGDIR/ubucdimage.log > /dev/null' EXIT
-
-echo "Starting at $(date)" >> $LOGDIR/ubucdimage.log
+echo "$(date -R): Lock established for process $(cat $LOCK)."
 
 set +e
-echo "Syncing alternate ISOs..." >> $LOGDIR/ubucdimage.log
+
+echo "$(date -R): Initiating Ubuntu daily alternate ISO sync..."
+
 rsync -av --partial --timeout=600 \
-      --bwlimit=$SPEED \
-	  $UBUCDI_EXCLUDE \
-      $UBUCDI_MIRROR/daily/current/ $UBUALTN >> $LOGDIR/ubucdimage.log 2>&1
+    --bwlimit=$SPEED \
+    $UBUCDI_EXCLUDE \
+    $UBUCDI_MIRROR/daily/current/ $UBUALTN
 
 if [ $? -ne 0 ]; then
-        ( echo "Eeek. Ubuntu alternate rsync broke down... Check logs.."; \
-          egrep '^write failed|@ERROR' $LOGDIR/ubucdimage.log ) | mail -s "Ubuntu cdimage sync failed" $EMAIL
-        echo "Eeek. Ubuntu alternate rsync broke down..." >> $LOGDIR/ubucdimage.log
-        exit 2
+    ( echo "Ubuntu daily alternate ISO sync failed. Please check logs."; \
+        egrep '^write failed|@ERROR' $LOGFILE ) | mail -s "Ubuntu cdimage sync failed" $EMAIL
+    echo "$(date -R): Ubuntu daily alternate ISO sync failed."
+    exit 2
 fi
 
-echo "Done at $(date)" >> $LOGDIR/ubucdimage.log
+echo "$(date -R): Ubuntu daily alternate ISO sync completed."
 
-echo "Syncing desktop ISOs..." >> $LOGDIR/ubucdimage.log
+echo "$(date -R): Initiating Ubuntu daily desktop ISO sync..."
+
 rsync -av --partial --timeout=600 \
-      --bwlimit=$SPEED \
-      $UBUCDI_EXCLUDE \
-      $UBUCDI_MIRROR/daily-live/current/ $UBULIVE >> $LOGDIR/ubucdimage.log 2>&1
+    --bwlimit=$SPEED \
+    $UBUCDI_EXCLUDE \
+    $UBUCDI_MIRROR/daily-live/current/ $UBULIVE
 
 if [ $? -ne 0 ]; then
-        ( echo "Eeek. Ubuntu desktop rsync broke down... Check logs.."; \
-          egrep '^write failed|@ERROR' $LOGDIR/ubucdimage.log ) | mail -s "Ubuntu cdimage sync failed" $EMAIL
-        echo "Eeek. Ubuntu desktop rsync broke down..." >> $LOGDIR/ubucdimage.log
-        exit 2
+    ( echo "Ubuntu daily desktop ISO sync failed. Please check logs."; \
+        egrep '^write failed|@ERROR' $LOGFILE ) | mail -s "Ubuntu cdimage sync failed" $EMAIL
+    echo "$(date -R): Ubuntu daily desktop ISO sync failed."
+    exit 2
 fi
 
+echo "$(date -R): Ubuntu daily desktop ISO sync completed."
+
+echo "$(date -R): Releasing lock file..."
 rm -f $LOCK > /dev/null 2>&1
+
+echo "$(date -R): Ubuntu daily CD image mirror operations completed."
