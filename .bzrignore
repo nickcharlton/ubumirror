@@ -1,0 +1,4 @@
+debian/files
+debian/ubumirror/
+debian/ubumirror.debhelper.log
+debian/ubumirror.substvars
