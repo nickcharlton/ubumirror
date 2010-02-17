@@ -1,4 +1,15 @@
-ubumirror (0.1.1ubuntu1) lucid; urgency=low
+ubumirror (0.1.1ubuntu3) lucid; urgency=low
+
+  * Use dh_clean instead of dh_prep in clean:.
+  * Rename Vcs-Bzr to XS-Upstream-Vcs-Bzr since Ubuntu uploaders can't
+    commit to it; since lp:ubuntu/ubumirror is derived from the upstream
+    branch, it should be easy to resync.
+  * Bump up Standards-Version to 3.8.3.
+  * Rewrite rules to use dh, debian/*.install, and to drop debian/dirs.
+
+ -- Loïc Minier <loic.minier@ubuntu.com>  Wed, 17 Feb 2010 18:06:32 +0100
+
+ubumirror (0.1.1ubuntu2) lucid; urgency=low
 
   * updated to include a default configuration in
     /etc/ubumirror.conf (thanks to Jonathan Davies)
