@@ -63,7 +63,7 @@ fi
 echo "$(date -R): Lock established for process $(cat ${LOCK})."
 
 set +e
-echo "$(date -R): Syncing Ubuntu release CD images..."
+echo "$(date -R): Initiating Ubuntu release CD image sync..."
 
 rsync -av --partial --timeout=600 --bwlimit=$SPEED --delete-after \
       --exclude .trace --exclude Archive-Update-in-Progress-* \
