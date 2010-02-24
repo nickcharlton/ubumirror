@@ -67,8 +67,7 @@ echo "$(date -R): Initiating Ubuntu ports pool sync..."
 
 rsync -av --timeout=600 --partial --delete --delete-after \
       --bwlimit=$SPEED \
-      --exclude "indices/" --exclude "dists/" \
-      --exclude "project/trace/${HOSTNAME}" \
+      --exclude "indices/" --exclude "dists/" --exclude "project/trace/" \
       --exclude "Archive-Update-in-Progress-${HOSTNAME}" \
       $UBUPOR_EXCLUDE \
       $UBUPOR_MIRROR $UBUPOR_DIR
@@ -86,7 +85,7 @@ echo "$(date -R): Initiating Ubuntu ports dists and indices sync..."
 
 rsync -av --timeout=600 --partial --delete --delete-after \
       --bwlimit=$SPEED \
-      --exclude "pool/" --exclude "project/trace/${HOSTNAME}" \
+      --exclude "pool/" --exclude "project/trace/" \
       --exclude "Archive-Update-in-Progress-${HOSTNAME}" \
       $UBUPOR_EXCLUDE \
       $UBUPOR_MIRROR $UBUPOR_DIR
