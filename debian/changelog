@@ -1,3 +1,16 @@
+ubumirror (0.2ubuntu1) lucid; urgency=low
+
+  * 0.2ubuntu1 update.
+
+  [ Jonathan Davies ]
+  * Use exec tricks to log all output to file.
+  * Improved wording.
+
+  [ Nafallo Bjälevik ]
+  * Stop removing other people's trace files globally in all scripts.
+
+ -- Jonathan Davies <jpds@ubuntu.com>  Wed, 17 Feb 2010 23:46:14 +0000
+
 ubumirror (0.1.1ubuntu3) lucid; urgency=low
 
   * Use dh_clean instead of dh_prep in clean:.
