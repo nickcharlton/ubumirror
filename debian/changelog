@@ -1,3 +1,10 @@
+ubumirror (0.2ubuntu2) UNRELEASED; urgency=low
+
+  * Mirror configurable set of cdimage flavours, rather
+    than just Ubuntu Desktop live and alternate
+
+ -- Emmet Hikory <persia@ubuntu.com>  Sat, 13 Mar 2010 14:32:39 +0900
+
 ubumirror (0.2ubuntu1) lucid; urgency=low
 
   * 0.2ubuntu1 update.
