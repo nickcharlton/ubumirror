@@ -67,7 +67,7 @@ echo "$(date -R): Initiating Ubuntu archive pool sync..."
 
 rsync -av --timeout=600 --partial --delete --delete-after \
       --bwlimit=$SPEED \
-      --exclude "indices/" --exclude "dists/" --exclude "project/trace/}" \
+      --exclude "indices/" --exclude "dists/" --exclude "project/trace/" \
       --exclude "Archive-Update-in-Progress-${HOSTNAME}" \
       $UBUARC_EXCLUDE \
       $UBUARC_MIRROR $UBUARC_DIR
