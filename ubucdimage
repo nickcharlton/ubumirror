@@ -71,6 +71,7 @@ echo "$(date -R): Initiating Ubuntu daily alternate ISO sync..."
 
 rsync -av --partial --timeout=600 \
     --bwlimit=$SPEED \
+    --exclude ".trace/${HOSTNAME}" \
     $UBUCDI_EXCLUDE \
     $UBUCDI_MIRROR/daily/current/ $UBUALTN
 
@@ -87,6 +88,7 @@ echo "$(date -R): Initiating Ubuntu daily desktop ISO sync..."
 
 rsync -av --partial --timeout=600 \
     --bwlimit=$SPEED \
+    --exclude ".trace/${HOSTNAME}" \
     $UBUCDI_EXCLUDE \
     $UBUCDI_MIRROR/daily-live/current/ $UBULIVE
 

@@ -85,7 +85,7 @@ echo "$(date -R): Initiating Ubuntu archive dists and indices sync..."
 
 rsync -av --timeout=600 --partial --delete --delete-after \
       --bwlimit=$SPEED \
-      --exclude "pool/" --exclude "project/trace/" \
+      --exclude "pool/" --exclude "project/trace/${HOSTNAME}" \
       --exclude "Archive-Update-in-Progress-${HOSTNAME}" \
       $UBUARC_EXCLUDE \
       $UBUARC_MIRROR $UBUARC_DIR

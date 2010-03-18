@@ -1,3 +1,12 @@
+ubumirror (0.3ubuntu1) UNRELEASED; urgency=low
+
+  * 0.3ubuntu1 update.
+
+  [ Jonathan Davies ]
+  * Remove trace files which aren't upstream by default.
+
+ -- Jonathan Davies <jpds@ubuntu.com>  Thu, 18 Mar 2010 17:38:13 +0000
+
 ubumirror (0.2ubuntu1) lucid; urgency=low
 
   * 0.2ubuntu1 update.
