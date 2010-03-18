@@ -43,9 +43,6 @@ LOCK="${UBUCDI_DIR}/Archive-Update-in-Progress-${HOSTNAME}"
 
 trap 'rm -f $LOCK > /dev/null 2>&1; savelog -c 28 -n $LOGFILE > /dev/null' EXIT
 
-UBUALTN="${UBUCDI_DIR}/daily/"
-UBULIVE="${UBUCDI_DIR}/daily-live/"
-
 # Get in the right directory and set the umask to be group writable
 cd $HOME
 umask 022
@@ -67,41 +64,32 @@ echo "$(date -R): Lock established for process $(cat $LOCK)."
 
 set +e
 
-echo "$(date -R): Initiating Ubuntu daily alternate ISO sync..."
-
-rsync -av --partial --timeout=600 \
-    --bwlimit=$SPEED \
-    --exclude ".trace/${HOSTNAME}" \
-    $UBUCDI_EXCLUDE \
-    $UBUCDI_MIRROR/daily/current/ $UBUALTN
-
-if [ $? -ne 0 ]; then
-    ( echo "Ubuntu daily alternate ISO sync failed. Please check logs."; \
-        egrep '^write failed|@ERROR' $LOGFILE ) | mail -s "Ubuntu cdimage sync failed" $EMAIL
-    echo "$(date -R): Ubuntu daily alternate ISO sync failed."
-    exit 2
+if [ -z "$UBUCDI_FLAVOURS" ]; then
+    echo Please define UBUCDI_FLAVOURS in /etc/ubumirror.conf
+    exit 1
 fi
 
-echo "$(date -R): Ubuntu daily alternate ISO sync completed."
+for FLAVOUR in $UBUCDI_FLAVOURS; do 
+    echo "$(date -R): Initiating sync for $FLAVOUR..."
 
-echo "$(date -R): Initiating Ubuntu daily desktop ISO sync..."
+    mkdir -p $UBUCDI_DIR/$FLAVOUR
 
-rsync -av --partial --timeout=600 \
-    --bwlimit=$SPEED \
-    --exclude ".trace/${HOSTNAME}" \
-    $UBUCDI_EXCLUDE \
-    $UBUCDI_MIRROR/daily-live/current/ $UBULIVE
+    rsync -av --partial --timeout=600 \
+        --bwlimit=$SPEED \
+        --exclude ".trace/${HOSTNAME}" \
+        $UBUCDI_EXCLUDE \
+        $UBUCDI_MIRROR/$FLAVOUR/current/ $UBUCDI_DIR/$FLAVOUR
 
-if [ $? -ne 0 ]; then
-    ( echo "Ubuntu daily desktop ISO sync failed. Please check logs."; \
-        egrep '^write failed|@ERROR' $LOGFILE ) | mail -s "Ubuntu cdimage sync failed" $EMAIL
-    echo "$(date -R): Ubuntu daily desktop ISO sync failed."
-    exit 2
-fi
+    if [ $? -ne 0 ]; then
+        ( echo "Sync for $FLAVOUR failed. Please check logs."; \
+            egrep '^write failed|@ERROR' $LOGFILE ) | mail -s "Ubuntu cdimage $FLAVOUR sync failed" $EMAIL
+        echo "$(date -R): sync for $FLAVOUR failed."
+        exit 2
+    fi
 
-echo "$(date -R): Ubuntu daily desktop ISO sync completed."
+    echo "$(date -R): sync for $FLAVOUR completed."
+done
 
-echo "$(date -R): Releasing lock file..."
 rm -f $LOCK > /dev/null 2>&1
 
 echo "$(date -R): Ubuntu daily CD image mirror operations completed."

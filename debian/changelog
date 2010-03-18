@@ -5,6 +5,10 @@ ubumirror (0.3ubuntu1) UNRELEASED; urgency=low
   [ Jonathan Davies ]
   * Remove trace files which aren't upstream by default.
 
+  [ Emmet Hikory ]
+  * Mirror configurable set of cdimage flavours, rather
+    than just Ubuntu Desktop live and alternate
+
  -- Jonathan Davies <jpds@ubuntu.com>  Thu, 18 Mar 2010 17:38:13 +0000
 
 ubumirror (0.2ubuntu1) lucid; urgency=low
