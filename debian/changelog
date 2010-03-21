@@ -1,3 +1,9 @@
+ubumirror (0.3ubuntu2) UNRELEASED; urgency=low
+
+  * ubuports: restore missing \ to first rsync call
+
+ -- Emmet Hikory <persia@ubuntu.com>  Mon, 22 Mar 2010 00:08:00 +0900
+
 ubumirror (0.3ubuntu1) lucid; urgency=low
 
   * 0.3ubuntu1 update.
