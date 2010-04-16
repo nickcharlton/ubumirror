@@ -86,7 +86,7 @@ echo "$(date -R): Initiating Ubuntu ports dists and indices sync..."
 
 rsync -av --timeout=600 --partial --delete --delete-after \
       --bwlimit=$SPEED \
-      --exclude "pool/"
+      --exclude "pool/" \
       --exclude "project/trace/${HOSTNAME}" \
       --exclude "Archive-Update-in-Progress-${HOSTNAME}" \
       $UBUPOR_EXCLUDE \
