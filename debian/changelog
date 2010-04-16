@@ -1,4 +1,4 @@
-ubumirror (0.3ubuntu3) UNRELEASED; urgency=low
+ubumirror (0.3ubuntu3) lucid; urgency=low
 
   * ubuports: restore missing \ to second rsync call
 
