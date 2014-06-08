@@ -74,7 +74,8 @@ for FLAVOUR in $UBUCDI_FLAVOURS; do
 
     mkdir -p $UBUCDI_DIR/$FLAVOUR
 
-    rsync -av --partial --timeout=600 \
+    rsync -av --partial \
+        --timeout=$IO_TIMEOUT \
         --bwlimit=$SPEED \
         --exclude ".trace/${HOSTNAME}" \
         $UBUCDI_EXCLUDE \
