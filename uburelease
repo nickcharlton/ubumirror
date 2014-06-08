@@ -65,7 +65,9 @@ echo "$(date -R): Lock established for process $(cat ${LOCK})."
 set +e
 echo "$(date -R): Initiating Ubuntu release CD image sync..."
 
-rsync -av --partial --timeout=600 --bwlimit=$SPEED --delete-after \
+rsync -av --partial --delete-after \
+      --bwlimit=$SPEED 
+      --timeout=$IO_TIMEOUT \
       --exclude ".trace/${HOSTNAME}" \
       --exclude Archive-Update-in-Progress-* \
       $UBUREL_EXCLUDE \
