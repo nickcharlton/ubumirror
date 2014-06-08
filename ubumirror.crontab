@@ -1,5 +1,9 @@
 # https://wiki.ubuntu.com/Mirrors
 # This file can be put as-is in the /etc/cron.d/ directory.
+#
+# !!! Please consider changing run minutes to something random so as to not
+# artifically overload main archives at specific times.
+#
 # Update archive mirror every six hours.
 13 */6 * * * /usr/bin/ubuarchive >/dev/null
 # Update releases mirror every four hours
