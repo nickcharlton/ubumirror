@@ -6,7 +6,9 @@
 #
 # Update archive mirror every six hours.
 13 */6 * * * /usr/bin/ubuarchive >/dev/null
-# Update releases mirror every four hours
+# Update ports mirror every 6 hours.
+43 */6 * * * /usr/bin/ubuports >/dev/null
+# Update releases mirror every four hours.
 33 */4 * * * /usr/bin/uburelease >/dev/null
 # Update cdimage mirror every twenty-four hours around 5 am.
 53 4 * * * /usr/bin/ubucdimage >/dev/null
