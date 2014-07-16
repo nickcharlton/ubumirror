@@ -2,9 +2,8 @@ Source: ubumirror
 Section: net
 Priority: optional
 Maintainer: Jonathan Davies <jpds@ubuntu.com>
-Build-Depends: debhelper (>= 7.0.0)
-Standards-Version: 3.8.3
-XS-Upstream-Vcs-Bzr: http://bazaar.launchpad.net/~ubumirror-devs/ubumirror/trunk
+Build-Depends: debhelper (>= 9.0.0)
+Standards-Version: 3.9.5
 Homepage: https://launchpad.net/ubumirror
 
 Package: ubumirror
