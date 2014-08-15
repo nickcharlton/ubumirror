@@ -76,7 +76,7 @@ rsync -av --partial \
     $UBUCDI_MIRROR $UBUCDI_DIR
 
 if [ $? -ne 0 ]; then
-    ( echo "Sync for $FLAVOUR failed. Please check logs."; \
+    ( echo "CDimage sync failed. Please check logs."; \
         egrep '^write failed|@ERROR' $LOGFILE ) | mail -s "Ubuntu cdimage sync failed" $EMAIL
     echo "$(date -R): sync for cdimage failed."
     exit 2
@@ -84,6 +84,7 @@ fi
 
 echo "$(date -R): sync for cdimage completed."
 
+echo "$(date -R): Releasing lock file..."
 rm -f $LOCK > /dev/null 2>&1
 
 echo "$(date -R): Ubuntu daily CD image mirror operations completed."
