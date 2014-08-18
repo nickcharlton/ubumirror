@@ -12,3 +12,5 @@
 33 */4 * * * /usr/bin/uburelease >/dev/null
 # Update cdimage mirror every twenty-four hours around 5 am.
 53 4 * * * /usr/bin/ubucdimage >/dev/null
+# Update cloud-images mirror every twenty-four hours around 5 am.
+23 4 * * * /usr/bin/ubucloudimage >/dev/null

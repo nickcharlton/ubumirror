@@ -1,0 +1,89 @@
+#!/bin/sh
+#
+#   ubucloudimage - provides an easy way to sync cloud images from an ubuntu
+#                   cloud-image mirror.
+#
+#   Copyright (C) 2014 - 2015 Christopher Glass
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+set -e
+
+if [ ! -f /etc/ubumirror.conf ]; then
+    echo "Configuration file /etc/ubumirror.conf not found."
+    exit 2
+fi
+
+. /etc/ubumirror.conf
+
+LOGFILE="$LOGDIR/ubucloudimage.log"
+
+# Log all activity to file.
+exec >> $LOGFILE 2>&1
+
+if [ -z "$UBUARC_DIR" ]; then
+    echo -n "No Ubuntu cloud-image target directory (UBUCLOUD_DIR) set in "
+    echo "/etc/ubumirror.conf."
+    exit 2
+fi
+
+LOCK="${UBUCLOUD_DIR}/Archive-Update-in-Progress-${HOSTNAME}"
+
+trap 'rm -f $LOCK > /dev/null 2>&1; savelog -c 28 -n $LOGFILE > /dev/null' EXIT
+
+# Get in the right directory and set the umask
+cd $HOME
+umask 022
+
+echo "$(date -R): Initiating Ubuntu cloud-image mirror operations..."
+
+# Check to see if another sync is in progress
+if ! ( set -o noclobber; echo "$$" > "${LOCK}") 2> /dev/null; then
+    if ! $(kill -0 $(cat ${LOCK}) 2>/dev/null); then
+        # Process does either not exist or is not owned by us.
+        echo "$$" > "${LOCK}"
+    else
+        echo "$(date -R): Unable to proceed with operations; lock file still exists for PID $(cat ${LOCK})."
+        exit 1
+    fi
+fi
+
+echo "$(date -R): Lock established for process $(cat $LOCK)."
+
+set +e
+echo "$(date -R): Initiating cloud-image sync..."
+
+mkdir -p $UBUCLOUD_DIR
+
+rsync -av --partial --delete --delete-after \
+      --timeout=$IO_TIMEOUT \
+      --bwlimit=$SPEED \
+      --exclude ".trace/${HOSTNAME}" \
+      $UBUCOUD_EXCLUDE \
+      $UBUCLOUD_MIRROR $UBUCLOUD_DIR
+
+if [ $? -ne 0 ]; then
+    ( echo "CLoud-image sync failed. Please check logs."; \
+        egrep '^write failed|@ERROR' $LOGFILE ) | mail -s "Cloud-image sync failed" $EMAIL
+    echo "$(date -R): Cloud-image sync failed."
+    exit 1
+fi
+
+echo "$(date -R): Cloud-image sync completed."
+
+echo "$(date -R): Releasing lock file..."
+rm -f $LOCK > /dev/null 2>&1
+
+echo "$(date -R): Ubuntu cloud-image mirror operations completed."
