@@ -33,7 +33,7 @@ LOGFILE="$LOGDIR/ubucloudimage.log"
 # Log all activity to file.
 exec >> $LOGFILE 2>&1
 
-if [ -z "$UBUARC_DIR" ]; then
+if [ -z "$UBUCLOUD_DIR" ]; then
     echo -n "No Ubuntu cloud-image target directory (UBUCLOUD_DIR) set in "
     echo "/etc/ubumirror.conf."
     exit 2
