@@ -33,7 +33,7 @@ LOGFILE="$LOGDIR/ubucloudimage.log"
 # Log all activity to file.
 exec >> $LOGFILE 2>&1
 
-if [ -z "$UBUARC_DIR" ]; then
+if [ -z "$UBUCLOUD_DIR" ]; then
     echo -n "No Ubuntu cloud-image target directory (UBUCLOUD_DIR) set in "
     echo "/etc/ubumirror.conf."
     exit 2
@@ -75,7 +75,7 @@ rsync -av --partial --delete --delete-after \
       $UBUCLOUD_MIRROR $UBUCLOUD_DIR
 
 if [ $? -ne 0 ]; then
-    ( echo "CLoud-image sync failed. Please check logs."; \
+    ( echo "Cloud-image sync failed. Please check logs."; \
         egrep '^write failed|@ERROR' $LOGFILE ) | mail -s "Cloud-image sync failed" $EMAIL
     echo "$(date -R): Cloud-image sync failed."
     exit 1
